@@ -18,9 +18,18 @@ export const deleteCategory = (id)=>async(dispatch)=>{
 }
 
 export const add_new_Category = (category)=>async(dispatch)=>{
-    await axios.post(`${url}/categories`,category);
-    dispatch({
-        type:'addNewCategory',
-        payload:category
-    })
+    const res = await axios.post(`${url}/categories`,category);
+
+    if(res.status === 200){
+        alert(res.data.message);
+        dispatch({
+            type:'addNewCategory',
+            payload:res.data.category
+        })
+
+        window.location ="/admin/categories";
+
+    }
+
+   
 }

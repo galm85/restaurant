@@ -9,26 +9,24 @@ const AddNewCategory = (props) => {
     
 
     const handleChange = (e)=>{
-
         setNewCategory({...newCategory,[e.target.name]:e.target.value});
     }
 
     const handleImage = (e)=>{
-        let file = e.target.files[0];
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-
-        reader.onload = (e)=>{
-            
-            setNewCategory({...newCategory,image:e.target.result});
-        }
+        const file = e.target.files[0];
+        setNewCategory({...newCategory,image:file});
     }
+
+  
 
     const handleSubmit = (e)=>{
         e.preventDefault();
+        const data = new FormData();   
+        data.append('title',newCategory.title);
+        data.append('image',newCategory.image);
+        
         try {
-            props.add_new_Category(newCategory);
-            window.location ="/admin/categories";
+            props.add_new_Category(data);
             
         } catch (error) {
             alert(error)

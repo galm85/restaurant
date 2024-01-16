@@ -21,14 +21,7 @@ const Register = (props) => {
         setUser({...user,[e.target.name]:e.target.value})
     }
 
-    const handleImage = (e)=>{
-       let file = e.target.files[0];
-       let reader = new FileReader();
-       reader.readAsDataURL(file);
-       reader.onload = (e)=>{
-           setUser({...user,image:e.target.result});
-       }
-    }
+ 
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
@@ -66,7 +59,6 @@ const Register = (props) => {
                         {renderInput("password","Password",error,"password",handleChange)}
                         {renderInput("address","Address",error,"text",handleChange)}
                         {renderInput("phone","Phone",error,"text",handleChange)}
-                        {renderInput("image","image",error,"file",handleImage)}
                         {renderButton("Register")}
                     </form>
                 </div>

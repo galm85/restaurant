@@ -12,14 +12,14 @@ export const categoriesReducer = (state = initialState,action)=>{
             };
         
         case 'deleteCategory':
-            let filteredCategories = state.categories.filter(category=>category._id !== action.payload);
             return{
                 ...state,
-                categories:filteredCategories
+                categories:state.categories.filter(category=>category._id !== action.payload)
             }
 
         case 'addNewCategory':
-            let updatedCategories = state.categories.push(action.payload);
+            let updatedCategories = [...state.categories];
+            updatedCategories.push(action.payload);
             return{
                 ...state,
                 categories:updatedCategories
