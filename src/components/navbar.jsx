@@ -31,7 +31,7 @@ const Navbar = (props) => {
                       
                     {props.user && props.user.orders && (
                        <li className="nav-item">
-                       <Link className="nav-link" to="/orders">My Orders {props.user.orders.length}</Link>
+                       <Link className="nav-link" to="/orders">Cart {props.user.orders.length > 0 && props.user.orders.length }</Link>
                    </li>  
                     )}
                 </ul>

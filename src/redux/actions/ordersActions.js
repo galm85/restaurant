@@ -31,6 +31,18 @@ export const addNewOrder = (order,total)=>async(dispatch)=>{
     })
 }
 
+
+
+
+export const removeOrder = (order)=>async(dispatch)=>{
+    await axios.delete(`${url}/orders/remove-order/${order._id}`);
+    dispatch({
+        type:"removeOrder",
+        payload:order._id
+    })
+}
+
+// new
 export const updateCart = (product,op)=>async(dispatch)=>{
     let user = jwtDecode(localStorage.getItem('res'));
     const res = await axios.get(`${url}/users/get-user/${user._id}`);
@@ -55,13 +67,30 @@ export const updateCart = (product,op)=>async(dispatch)=>{
     }
 }
 
+export const getCart = ()=>async(dispatch)=>{
+    let user = jwtDecode(localStorage.getItem('res'));
 
-export const removeOrder = (order)=>async(dispatch)=>{
-    await axios.delete(`${url}/orders/remove-order/${order._id}`);
-    dispatch({
-        type:"removeOrder",
-        payload:order._id
-    })
+    const res = await axios.get(`${url}/orders/current/${user._id}`);
+    if(res.status === 200){
+      
+        dispatch({
+            type:'getCart',
+            payload:res.data.cart? res.data.cart : []
+        })
+    }
 }
 
+export const getOrdersHistory = ()=>async(dispatch)=>{
+    let user = jwtDecode(localStorage.getItem('res'));
+    if(user){
+        const res = await axios.get(`${url}/orders/order-history/${user._id}`);
+        if(res.status === 200){
+            dispatch({
+                type:'getHistory',
+                payload:res.data ? res.data : []
+            })
+        }
+    }
+
+}
 

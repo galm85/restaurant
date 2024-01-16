@@ -1,5 +1,6 @@
 const initialState = {
     orders:[],
+    cart:[],
     
 }
 
@@ -23,6 +24,18 @@ export const ordersReducer = (state=initialState,action)=>{
             return{
                 ...state,
                 orders:newOrders
+            }
+
+        case "getCart":
+            return{
+                ...state,
+                cart:action.payload
+            }
+
+        case "getHistory":
+            return{
+                ...state,
+                orders:action.payload
             }
         
 

@@ -1,7 +1,7 @@
 import React,{useEffect,useState} from 'react';
 import {connect} from 'react-redux';
 import {getUserData,removeItemFromOrder,getTotal,updateQuantity} from '../redux/actions/usersActions';
-import {addNewOrder} from '../redux/actions/ordersActions';
+import {addNewOrder,getCart,getOrdersHistory} from '../redux/actions/ordersActions';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
@@ -11,6 +11,8 @@ const MyOrders = (props) => {
     useEffect(()=>{
             props.getUserData();
             props.getTotal();
+            props.getCart();
+            props.getOrdersHistory();
     },[]);
 
 
@@ -50,8 +52,7 @@ const MyOrders = (props) => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Image</th>
-                                <th>Item Id</th>
+                                <th>Image</th>      
                                 <th>Product</th>
                                 <th>Quantity</th>
                                 <th>price</th>
@@ -60,20 +61,19 @@ const MyOrders = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {props.user.orders.map((order,index)=>(
+                            {props?.cart.map((product,index)=>(
                                 <tr key={index}>
                                     <td>{index+1}</td>
-                                    <td><img width="50px" src={order.image} alt=""/></td>
-                                    <td>{order.itemId}</td>
-                                    <td>{order.title}</td>
+                                    <td><img width="50px" src={product.image} alt={product.title}/></td>
+                                    <td>{product.title}</td>
                                     <td>
-                                        <button className="btn btn-success" onClick={()=>updateQuantity('+',order.itemId)}>+</button>
-                                        {order.quantity}
-                                        <button className="btn btn-danger" onClick={()=>updateQuantity('-',order.itemId)}>-</button>
+                                        <button className="btn btn-success" onClick={()=>updateQuantity('+',product.itemId)}>+</button>
+                                        {product.amount}
+                                        <button className="btn btn-danger" onClick={()=>updateQuantity('-',product.itemId)}>-</button>
                                     </td>
-                                    <td>{order.price}</td>
-                                    <td>{order.price * order.quantity}</td>
-                                    <td><button onClick={()=>{removeItem(order.itemId)}} className="btn btn-danger">Remove</button></td>
+                                    <td>${product.price}</td>
+                                    <td>${product.price * product.amount}</td>
+                                    <td><button onClick={()=>{removeItem(product.itemId)}} className="btn btn-danger">Remove</button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -81,19 +81,44 @@ const MyOrders = (props) => {
                 </div>
             </div>
             <hr className="mt-5"/>
-                <div className="row mt-1">
+            <div className="row mt-1">
                     <div className="col-md-12 d-flex justify-content-between">
                         
                         <h2>Total: ${props.total}</h2>
                         <button className="btn btn-primary" onClick={()=>checkout(props.user.orders,props.total)}>Checkout</button>
                     </div>
-                </div>
+            </div>
+
+            <hr />
+            
+            <div className="order-history">
+                <h2>History</h2>
+                {props.history && props.history.map(order=>(
+                    <div key={order._id} className="history-card">
+                        <p>Order Number: {order._id}</p>
+                        <p>Date: {order.createdAt}</p>
+                        <div className="order-details">
+                            {order.cart.map(item=>(
+                                <div key={item._id} className="order-history-item">
+                                    <img src={item.image} alt={item.title} style={{width:"50px"}}/>
+                                    <span> - {item.title}</span>
+                                    <span> - ${item.price}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+
         </div>
      );
 }
  
 const ms = state=>({
     user:state.users.user,
-    total:state.users.total
+    total:state.users.total,
+    cart:state.orders.cart,
+    history:state.orders.orders
 })
-export default connect(ms,{getUserData,removeItemFromOrder,getTotal,addNewOrder,updateQuantity})(MyOrders);
+export default connect(ms,{getUserData,removeItemFromOrder,getTotal,addNewOrder,updateQuantity,getCart,getOrdersHistory})(MyOrders);
