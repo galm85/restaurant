@@ -20,11 +20,20 @@ export const getProductsByCategory = (category)=>async(dispatch)=>{
 }
 
 export const add_New_Product = (product)=>async(dispatch)=>{
-    await axios.post(`${url}/products`,product);
-    dispatch({
-        type:"addNewProduct",
-        payload:product
-    })
+    const res = await axios.post(`${url}/products`,product);
+    if(res.status === 200){
+
+        alert(res.data.message);
+
+        dispatch({
+            type:"addNewProduct",
+            payload:res.data.product
+        })
+        window.location ="/admin/products"
+    }else{
+        alert('something went wrong');
+        console.log(res.data.message)
+    }
 }
 
 export const deleteProduct = (id)=>async(dispatch)=>{

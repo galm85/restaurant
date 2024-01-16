@@ -18,21 +18,27 @@ const AddNewProduct = (props) => {
 
     const handleImage = (e)=>{
         let file = e.target.files[0];
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
+        setNewProduct({...newProduct,image:file});
+        // let reader = new FileReader();
+        // reader.readAsDataURL(file);
 
-        reader.onload = (e)=>{
+        // reader.onload = (e)=>{
             
-            setNewProduct({...newProduct,image:e.target.result});
-        }
+        //     setNewProduct({...newProduct,image:e.target.result});
+        // }
     }
 
     const handleSubmit = async(e)=>{
         e.preventDefault();
+
+        const data = new FormData();
+        data.append('title',newProduct.title);
+        data.append('category',newProduct.category);
+        data.append('price',newProduct.price);
+        data.append('description',newProduct.description);
+        data.append('image',newProduct.image);
         try {
-            await props.add_New_Product(newProduct);
-            window.location ="/admin/products";
-            
+            await props.add_New_Product(data);            
         } catch (error) {
             alert(error)
         }
@@ -60,7 +66,7 @@ const AddNewProduct = (props) => {
                                 <select name="category" id="category" class="form-control" onChange={handleChange}>
                                     <option value="">Select a Category</option>
                                     {props.categories.map(category=>(
-                                        <option value={category.title.toLowerCase()}>{category.title}</option>
+                                        <option key={category._id} value={category.title.toLowerCase()}>{category.title}</option>
                                     ))}
                                 </select>
                             </div>
