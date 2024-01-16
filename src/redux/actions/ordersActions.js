@@ -31,6 +31,30 @@ export const addNewOrder = (order,total)=>async(dispatch)=>{
     })
 }
 
+export const updateCart = (product,op)=>async(dispatch)=>{
+    let user = jwtDecode(localStorage.getItem('res'));
+    const res = await axios.get(`${url}/users/get-user/${user._id}`);
+    user = res.data;
+    console.log(user);
+
+    let order = {
+        userId:user._id,
+        name:user.firstName + " " + user.lastName,
+        email:user.email,
+        phone:user.phone,
+        address:user.address,
+        product:product,
+        op:op
+    }
+
+    const response = await axios.post(`${url}/orders`,order)
+    if(response.status === 200){
+        alert(response.data.message);
+    }else{
+        console.log(response.data);
+    }
+}
+
 
 export const removeOrder = (order)=>async(dispatch)=>{
     await axios.delete(`${url}/orders/remove-order/${order._id}`);

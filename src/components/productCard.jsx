@@ -1,20 +1,18 @@
 import React,{useEffect,useState} from 'react';
 import '../styles/components.css';
 import {Link} from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
-import axios from 'axios';
 import {connect} from 'react-redux';
-import {addNewOrderItem} from '../redux/actions/usersActions';
+import {updateCart} from '../redux/actions/ordersActions';
 
 const ProductCard = (props) => {
     
     const [isUser,setIsUser] = useState(true);
     
     const addOrder = async(product)=>{
-        
-        await props.addNewOrderItem(product);
-        window.location='';
-        alert('added to my orders');
+     
+        await props.updateCart(product,"+");
+        // window.location='';
+        // alert('added to my orders');
     }
 
 
@@ -49,4 +47,4 @@ const ProductCard = (props) => {
 }
  
 
-export default connect(null,{addNewOrderItem})(ProductCard);
+export default connect(null,{updateCart})(ProductCard);
