@@ -1,38 +1,40 @@
 import React,{useEffect,useState} from 'react';
 import {connect} from 'react-redux';
-import {getUserData,removeItemFromOrder,getTotal,updateQuantity} from '../redux/actions/usersActions';
-import {addNewOrder,getCart,getOrdersHistory} from '../redux/actions/ordersActions';
-import axios from 'axios';
-import jwtDecode from 'jwt-decode';
+import {getUserData} from '../redux/actions/usersActions';
+import {addNewOrder,getCart,getOrdersHistory,removeItemFromCart,updateItemAmount} from '../redux/actions/ordersActions';
 
 const MyOrders = (props) => {
     
 
     useEffect(()=>{
             props.getUserData();
-            props.getTotal();
             props.getCart();
             props.getOrdersHistory();
     },[]);
 
+    const [total,setTotal] = useState(0);
 
-    const removeItem = (id)=>{
-        props.removeItemFromOrder(id);
-        window.location = '';
+
+    const checkout =()=>{
+      props.addNewOrder(props.user._id);
     }
 
-    const checkout =async (order,total)=>{
-       await props.addNewOrder(order,total);
-        let {_id} = jwtDecode(localStorage.getItem('res')); 
-       await axios.patch('http://localhost:4000/users/checkout/'+_id);
-       window.location = '/menu';
+    const updateQuantity = (userId,productId,op)=>{
+        props.updateItemAmount(userId,productId,op);
     }
 
-    const updateQuantity = async(op,itemId)=>{
-        props.updateQuantity(op,itemId);
-    }
+    useEffect(()=>{
+        if(props.cart){
+            let tempTotal = 0;
+            props.cart.forEach(item => {
+                tempTotal += item.price * item.amount;
+            });
+            setTotal(tempTotal.toFixed(2))
+        }
+    },[updateQuantity,removeItemFromCart])
 
-    if(!props.user.orders){
+
+    if(!props.cart){
         return (<div>loading</div>);
     }
 
@@ -67,13 +69,13 @@ const MyOrders = (props) => {
                                     <td><img width="50px" src={product.image} alt={product.title}/></td>
                                     <td>{product.title}</td>
                                     <td>
-                                        <button className="btn btn-success" onClick={()=>updateQuantity('+',product.itemId)}>+</button>
+                                        <button className="btn btn-success" onClick={()=>updateQuantity(props.user._id,product._id,'increase')}>+</button>
                                         {product.amount}
-                                        <button className="btn btn-danger" onClick={()=>updateQuantity('-',product.itemId)}>-</button>
+                                        <button className="btn btn-danger" onClick={()=>updateQuantity(props.user._id,product._id,'decrease')}>-</button>
                                     </td>
                                     <td>${product.price}</td>
                                     <td>${product.price * product.amount}</td>
-                                    <td><button onClick={()=>{removeItem(product.itemId)}} className="btn btn-danger">Remove</button></td>
+                                    <td><button onClick={()=>{props.removeItemFromCart(props.user._id,product._id)}} className="btn btn-danger">Remove</button></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -84,7 +86,7 @@ const MyOrders = (props) => {
             <div className="row mt-1">
                     <div className="col-md-12 d-flex justify-content-between">
                         
-                        <h2>Total: ${props.total}</h2>
+                        <h2>Total: ${total}</h2>
                         <button className="btn btn-primary" onClick={()=>checkout(props.user.orders,props.total)}>Checkout</button>
                     </div>
             </div>
@@ -121,4 +123,11 @@ const ms = state=>({
     cart:state.orders.cart,
     history:state.orders.orders
 })
-export default connect(ms,{getUserData,removeItemFromOrder,getTotal,addNewOrder,updateQuantity,getCart,getOrdersHistory})(MyOrders);
+export default connect(ms,{
+    getUserData,
+    addNewOrder,
+    getCart,
+    getOrdersHistory,
+    removeItemFromCart,
+    updateItemAmount
+})(MyOrders);

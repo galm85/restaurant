@@ -12,23 +12,19 @@ export const getAllOrders = ()=>async(dispatch)=>{
 
 }
 
-export const addNewOrder = (order,total)=>async(dispatch)=>{
-    const {_id} = jwtDecode(localStorage.getItem('res'));
-    const {data} = await axios.get(`${url}/users/get-user/${_id}`);
-    let fullOrder = {
-        userId:data._id,
-        name:data.firstName + ' ' + data.lastName,
-        email:data.email,
-        phone:data.phone,
-        address:data.address,
-        orders:order,
-        total:total
+export const addNewOrder = (userId)=>async(dispatch)=>{
+    
+    const res = await axios.put(`${url}/orders/checkout/${userId}`);
+    if(res.status === 200){
+        dispatch({
+            type:"addNewOrder",
+        })
+        alert(res.data.message);
+        window.location = '/';
     }
-    await axios.post(`${url}/orders`,fullOrder);
-    dispatch({
-        type:"addNewOrder",
-        payload:fullOrder
-    })
+    else{
+        console.log(res.data.message);
+    }
 }
 
 
@@ -92,5 +88,41 @@ export const getOrdersHistory = ()=>async(dispatch)=>{
         }
     }
 
+}
+
+
+export const removeItemFromCart = (userId,productId)=>async(dispatch)=>{
+    try{
+
+        const res = await axios.put(`${url}/orders/remove-item-from-cart/${userId}/${productId}`);
+        if(res.status === 200){
+            dispatch({
+                type:'removeItemFromCart',
+                payload:productId
+            })
+        }
+    }catch(error){
+        console.log(error.message)
+    }
+        
+}
+
+
+export const updateItemAmount = (userId,productId,op)=>async(dispatch)=>{
+    try {
+        const res = await axios.patch(`${url}/orders/update-item-quantity/${userId}/${productId}/${op}`);
+        if(res.status === 500){
+            alert(res.data.message);
+            return;
+        }
+        if(res.status === 200){
+            dispatch({
+                type:'updateItemAmount',
+                payload:res.data.cart
+            })
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 

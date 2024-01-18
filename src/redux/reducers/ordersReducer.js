@@ -13,10 +13,10 @@ export const ordersReducer = (state=initialState,action)=>{
             }
 
         case "addNewOrder":
-            let newOrdersList = state.orders.push(action.payload);
+           
             return{
                 ...state,
-                orders:newOrdersList
+                cart:[]
             }
 
         case "removeOrder":
@@ -36,6 +36,19 @@ export const ordersReducer = (state=initialState,action)=>{
             return{
                 ...state,
                 orders:action.payload
+            }
+
+        case "removeItemFromCart":
+            const filteredCart = state.cart.filter(item => item._id !== action.payload);
+            return{
+                ...state,
+                cart:filteredCart
+            }
+
+        case "updateItemAmount":
+            return{
+                ...state,
+                cart:action.payload
             }
         
 
