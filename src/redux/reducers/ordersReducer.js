@@ -6,14 +6,13 @@ const initialState = {
 
 export const ordersReducer = (state=initialState,action)=>{
     switch(action.type){
-        case "getAllUsers":
+        case "getAllOrders":
             return{
                 ...state,
                 orders:action.payload
             }
 
         case "addNewOrder":
-           
             return{
                 ...state,
                 cart:[]

@@ -3,12 +3,15 @@ import {url} from '../../config.json';
 import jwtDecode from 'jwt-decode';
 
 export const getAllOrders = ()=>async(dispatch)=>{
-    const res = await axios.get(`${url}/orders`);
-    console.log(res.data);
-    dispatch({
-        type:"getAllOrders",
-        payload:res.data
-    })
+    try{
+        const res = await axios.get(`${url}/orders`);
+        dispatch({
+            type:"getAllOrders",
+            payload:res.data
+        })
+    }catch(error){
+        console.log(error.message);
+    }
 
 }
 
@@ -27,15 +30,18 @@ export const addNewOrder = (userId)=>async(dispatch)=>{
     }
 }
 
-
-
-
-export const removeOrder = (order)=>async(dispatch)=>{
-    await axios.delete(`${url}/orders/remove-order/${order._id}`);
-    dispatch({
-        type:"removeOrder",
-        payload:order._id
-    })
+export const removeOrder = (orderId)=>async(dispatch)=>{
+    try{
+        const res = await axios.delete(`${url}/orders/remove-order/${orderId}`);
+       if(res.status === 200){
+           dispatch({
+               type:"removeOrder",
+               payload:orderId
+            })
+        }
+    }catch(error){
+        console.log(error.message);
+    }
 }
 
 // new
