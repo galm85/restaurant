@@ -2,6 +2,7 @@ import axios from 'axios';
 import {url} from '../../config.json';
 import jwtDecode from 'jwt-decode';
 
+// Orders
 export const getAllOrders = ()=>async(dispatch)=>{
     try{
         const res = await axios.get(`${url}/orders`);
@@ -44,30 +45,26 @@ export const removeOrder = (orderId)=>async(dispatch)=>{
     }
 }
 
-// new
-export const updateCart = (product,op)=>async(dispatch)=>{
-    let user = jwtDecode(localStorage.getItem('res'));
-    const res = await axios.get(`${url}/users/get-user/${user._id}`);
-    user = res.data;
-    console.log(user);
-
-    let order = {
-        userId:user._id,
-        name:user.firstName + " " + user.lastName,
-        email:user.email,
-        phone:user.phone,
-        address:user.address,
-        product:product,
-        op:op
-    }
-
-    const response = await axios.post(`${url}/orders`,order)
-    if(response.status === 200){
-        alert(response.data.message);
-    }else{
-        console.log(response.data);
+// Cart
+export const updateCart = (user,product)=>async(dispatch)=>{
+ 
+    try{
+        let order = {user,product}
+        const res = await axios.post(`${url}/orders`,order);
+        if(res.status === 200){
+            alert(res.data.message);
+            dispatch({
+                type:"addToCart",
+                payload:res.data.order
+            })
+        }else{
+            console.log(res.data);
+        }
+    }catch(error){
+        console.log(error);
     }
 }
+
 
 export const getCart = ()=>async(dispatch)=>{
     let user = jwtDecode(localStorage.getItem('res'));
@@ -81,6 +78,7 @@ export const getCart = ()=>async(dispatch)=>{
         })
     }
 }
+
 
 export const getOrdersHistory = ()=>async(dispatch)=>{
     let user = jwtDecode(localStorage.getItem('res'));

@@ -9,10 +9,7 @@ const ProductCard = (props) => {
     const [isUser,setIsUser] = useState(true);
     
     const addOrder = async(product)=>{
-     
         await props.updateCart(product,"+");
-        // window.location='';
-        // alert('added to my orders');
     }
 
 

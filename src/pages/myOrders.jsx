@@ -63,11 +63,11 @@ const MyOrders = (props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {props?.cart.map((product,index)=>(
+                            {props.cart && props.cart.map((product,index)=>(
                                 <tr key={index}>
                                     <td>{index+1}</td>
-                                    <td><img width="50px" src={product.image} alt={product.title}/></td>
-                                    <td>{product.title}</td>
+                                    <td><img width="50px" src={product?.image} alt={product?.title}/></td>
+                                    <td>{product?.title}</td>
                                     <td>
                                         <button className="btn btn-success" onClick={()=>updateQuantity(props.user._id,product._id,'increase')}>+</button>
                                         {product.amount}

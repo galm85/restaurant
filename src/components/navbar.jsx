@@ -2,10 +2,11 @@ import React,{useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {getUserData} from '../redux/actions/usersActions';
-
+import {getCart} from '../redux/actions/ordersActions';
 const Navbar = (props) => {
 
     useEffect(()=>{
+        props.getCart();
         async function getData(){
             await props.getUserData();
             
@@ -31,7 +32,7 @@ const Navbar = (props) => {
                       
                     {props.user && props.user.orders && (
                        <li className="nav-item">
-                       <Link className="nav-link" to="/orders">Cart {props.user.orders.length > 0 && props.user.orders.length }</Link>
+                       <Link className="nav-link" to="/orders">Cart <span className="cart-badge">{props.cart.length && props.cart.length }</span></Link>
                    </li>  
                     )}
                 </ul>
@@ -79,6 +80,7 @@ const Navbar = (props) => {
 }
 
 const mapStateToProps = state=>({
-    user:state.users.user
+    user:state.users.user,
+    cart:state.orders.cart
 })
-export default connect(mapStateToProps,{getUserData})(Navbar);
+export default connect(mapStateToProps,{getUserData,getCart})(Navbar);

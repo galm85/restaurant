@@ -50,6 +50,11 @@ export const ordersReducer = (state=initialState,action)=>{
                 cart:action.payload
             }
         
+        case "addToCart":
+            return{
+                ...state,
+                cart:action.payload.cart
+            }
 
         default: return state;
     }
