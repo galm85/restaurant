@@ -1,4 +1,5 @@
 import React,{useEffect} from 'react';
+import '../styles/components.css';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {getUserData} from '../redux/actions/usersActions';
@@ -9,13 +10,12 @@ const Navbar = (props) => {
         props.getCart();
         async function getData(){
             await props.getUserData();
-            
         }
         getData();
     },[])
 
     return ( 
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav className="navbar navbar-expand-lg navbar-dark res-navbar">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">Resturant</Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,10 +30,13 @@ const Navbar = (props) => {
                         <Link className="nav-link" to="/menu">Menu</Link>
                     </li>
                       
-                    {props.user && props.user.orders && (
-                       <li className="nav-item">
-                       <Link className="nav-link" to="/orders">Cart <span className="cart-badge">{props.cart.length && props.cart.length }</span></Link>
-                   </li>  
+                    {props.user && (
+                       <li className="nav-item cart-link">
+                            <Link className="nav-link" to="/orders">Cart 
+                            {props.cart.length > 0 &&  <span className="cart-badge">{props.cart.length }</span>}
+                           
+                            </Link>
+                       </li>  
                     )}
                 </ul>
 

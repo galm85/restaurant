@@ -28,17 +28,28 @@ export const signInUser = (user)=>async(dispatch)=>{
 export const getUserData = ()=>async(dispatch)=>{
     try{
         const token = await localStorage.getItem('res');
-        const userDecode = await jwtDecode(token);
-        const user = await axios.get(`${url}/users/get-user/${userDecode._id}`);
-        dispatch({
-            type:"getUserData",
-            payload:user.data
-        })
+        if(token !== null){
+            console.log(token);
+
+            const userDecode = await jwtDecode(token);
+            const user = await axios.get(`${url}/users/get-user/${userDecode._id}`);
+            dispatch({
+                type:"getUserData",
+                payload:user.data
+            })
+        }else{
+            console.log('no token');
+            dispatch({
+                type:"getUserData",
+                payload:null
+            })
+        }
     }catch(error){
         dispatch({
             type:"getUserData",
             payload:null
         })
+        
     }
     
 

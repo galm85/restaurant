@@ -67,14 +67,21 @@ export const updateCart = (user,product)=>async(dispatch)=>{
 
 
 export const getCart = ()=>async(dispatch)=>{
-    let user = jwtDecode(localStorage.getItem('res'));
+    if(localStorage.getItem('res')){
+        let user = jwtDecode(localStorage.getItem('res'));
 
-    const res = await axios.get(`${url}/orders/current/${user._id}`);
-    if(res.status === 200){
-      
+        const res = await axios.get(`${url}/orders/current/${user._id}`);
+        if(res.status === 200){
+        
+            dispatch({
+                type:'getCart',
+                payload:res.data.cart? res.data.cart : []
+            })
+        }
+    }else{
         dispatch({
             type:'getCart',
-            payload:res.data.cart? res.data.cart : []
+            payload:[]
         })
     }
 }

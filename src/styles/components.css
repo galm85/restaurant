@@ -1,5 +1,10 @@
 
 /* Category Card */
+
+.category-card{
+        flex: 1;
+        height: 200px;
+}
 .category-card a{
     text-decoration: none;
 }
@@ -115,4 +120,33 @@
     color: antiquewhite;
     margin: 10px;
     font-size: 1.5rem;
+}
+
+
+
+.res-navbar{
+   padding-inline: 100px;
+   background-color: black;
+}
+
+
+
+/* Navbar */
+.cart-link{
+    position: relative;;
+}
+
+.cart-link .cart-badge{
+    display: inline-block;
+    color:white;
+    background-color: red;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    top: 0px;
+    font-size: 14px;
+    font-weight: bold;
 }

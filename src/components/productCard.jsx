@@ -1,24 +1,17 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect} from 'react';
 import '../styles/components.css';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {updateCart} from '../redux/actions/ordersActions';
+import {getUserData} from '../redux/actions/usersActions';
+
 
 const ProductCard = (props) => {
     
-    const [isUser,setIsUser] = useState(true);
-    
-    const addOrder = async(product)=>{
-        await props.updateCart(product,"+");
-    }
-
+   
 
     useEffect(()=>{
-        let user = localStorage.getItem('res');
-        if(!user){
-           setIsUser(false);
-        }
-
+        props.getUserData();
     },[])
 
     const product = props.product;
@@ -35,13 +28,14 @@ const ProductCard = (props) => {
                 </div>
                 <div className="product-card-actions">
                     <Link class="btn btn-primary mb-1" to={{pathname:`/menu/${product.category}/${product.title}`,state:{product}}}>More info</Link>
-                    
-                    <button disabled={isUser?"":"disabled"} className="btn btn-success" onClick={()=>addOrder(product)}>{isUser?"Add to cart":"please sign in"}</button>
+                    <button disabled={props.user?"":"disabled"} className="btn btn-success" onClick={()=>props.updateCart(props.user,product)}>{props.user?"Add to cart":"please sign in"}</button>
                 </div>
            </div>
        </div>
      );
 }
  
-
-export default connect(null,{updateCart})(ProductCard);
+const ms = state=>({
+    user:state.users.user,
+})
+export default connect(ms,{updateCart,getUserData})(ProductCard);

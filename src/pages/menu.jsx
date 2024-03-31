@@ -19,10 +19,10 @@ const Menu = (props) => {
                    <img  src="./images/menuBanner.jpg" alt="menu Banner"/>
                     <h1 style={{fontFamily:'Dancing Script, cursive'}}> Our Menu</h1>
             </div>
-       <div className="container">
-           <div className="row d-flex mt-5">
+       <div className="menu-container">
+           <div className="row d-flex mt-5 m-auto">
                     {props.categories.map(category=>(
-                        <div className="col-md-4">
+                        <div className="col-md-4 my-5">
                         <CategoryCard key={category._id} category={category}/>
                 </div>
                    ))}
