@@ -1,3 +1,4 @@
 {
-    "url":"http://localhost:4000/api/restaurant"
+    "url2":"http://localhost:4000/api/restaurant",
+    "url":"https://gwd-server.onrender.com/api/restaurant"
 }
